@@ -1,0 +1,123 @@
+---
+title: "Project Title"
+subtitle: "Statistical Analysis Plan"
+author: "Authors"
+date: "`r format(Sys.time(), format = '%m/%d/%Y')`"
+output:
+  word_document:
+    fig_width: 7.5
+    number_sections: true
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+packages <- list("tidyverse", "lubridate", "magrittr", "knitr")
+
+for(i in packages){
+  suppressWarnings(suppressPackageStartupMessages(
+    library(i, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+    ))
+}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+options(width = 80, max.print = 1e9, stringsAsFactors = FALSE)
+options(dplyr.width = Inf, dplyr.print_max = 1e9)
+options(dplyr.summarise.inform = FALSE)
+
+flextable::set_flextable_defaults(
+  font.family = "Arial",
+  font.size = 11
+)
+```
+
+
+# Introduction
+
+The document provides a statistical analysis plan for the manuscript titled, *The Exposure and the Outcome Among the Study Participants*.
+
+The association of the exposure on the outcome will be examined in a cross-sectional study among the study participants.
+
+<br> 
+
+# Objectives
+
+The goals of this manuscript are:
+
+1. To estimate the prevalence of the outcome among the study participants in the presence and absence of the effect modifier
+1. To characterize the interaction between the exposure and the effect modifier in their associations on the outcome
+
+<br> 
+
+# Study Design and Participants
+
+This is a cross-sectional analysis of baseline data from the study. All study participants with non-missing effect modifier, exposure, and outcome measures will be used in the analyses (n = `r airquality |> nrow()`).
+
+<br> 
+
+# Study Measures and Covariates
+
+## Outcome
+
+The outcome of interest is self-reported outcome as measured by the sum of responses to the brief 10-item scale. The overall score (`total_score`) is the sum of 10 questions (`outcome_01` to `outcome_10`), and the answers to each of these questions are coded as 0: "Not True at all", 1: "Rarely True", 2: "Sometimes True", 3: "Often True", and 4: "True Nearly all the Time". Thus, the sum of responses can range from 0 to 40, with higher scores indicating higher self-reported outcome Because this `total_score` variable has a very left-skewed distribution, we will use a categorical version of this variable, `total_score_cat`, with categories of < 25th percentile, >= 25th percentile and < 75th percentile, and >= 75th percentile, where percentiles refer to percentiles of the overall study cohort. 
+
+## Exposure
+
+The exposure is measured using the instrument. The total score `num_exposure` is the sum of responses to 24 questions (`exposure_01` to `exposure_22` in addition to `exposure_29` and `exposure_30`), where the answers to each of these questions can be either 0: "No" or 1:"Yes". Thus, the sum of responses can range from 0 to 24, with higher scores indicating a higher exposure. The variable used in the present analyses (`num_exposure_cat`) consists of two categories : one for participants with 0-3 `num_exposure` and one for participants with 4 or more `num_exposure`. 
+
+## Effect Modifier
+
+The effect modifier will be determined using the `eff_mod` variable, which reflects each participant's answer to the question and has three possible responses: "Yes", "No", and "Don't Know". Participants who responded "Don't Know" to this question are coded as having missing effect modifier information. Note that responses to this question were collected as part of the 3 month follow-up: quite a bit of information regarding the dates of effect modifier occurrence is missing, but a brief check suggested that there are only 2 participants who listed a year of effect modifier occurrence that was the same year they were involved with the study. As of now, it is unclear whether these two participants developed such effect modifier occurrence between enrollment and follow-up or before enrollment in the same calendar year.
+
+## Patient Characteristics
+
+* **Age** (`agecat` from the `demo` form, with levels 25-34, 35-44, 45-54, and 55-65)
+* **Race** (`race_4level` from the `demo` form, with levels "White", "Black or African American", "Other", and "Unknown or Not Reported")
+    + We could collapse the "Other" and the "Unknown or Not Reported" levels into one and/or code the latter category as NA if desired?
+* **Sex** (`sex_3level` from the `demo` form, with levels "Male", "Female", and "Unknown or Not Reported")
+* **Education** (`education_4level` from the `sdoh` form, with levels "< H.s.", "Completed high school or GED", "Some college but no degree", and "College, Associates, or Technical school graduate+")
+* **Employment status** (`employment_4level` from the `sdoh` form, with levels "Employed", "Unemployed", "Retired", and "Other". 
+* **Household income** (`income_3level` from the `sdoh` form, with levels "<$25K", "$25K-$49,999", and ">$50K")
+* **BMI** (`bmi_4level` from the `anthropometry` form, with levels "<18.5", ">=18.5 and <25", ">=25 and <30", and ">=30")
+* **Smoking** (`smoke_status_3level` from the `behavioral_history` form, with levels "Never", "Used to", and "Current")
+* **Alcohol** (`alcohol_use_5level` from the `behavioral_history` form, with levels "Never", "Monthly or Less", "2-4 times a month", "2-3 times a week", and "4 or more times a week")
+
+<br> 
+
+# Statistical Methods
+
+## General Approach
+
+For all analyses, the overall level of significance will be set to $\alpha=0.05$. Data analyses will be performed using the latest version of `R` (currently `r R.Version()$version.string`; https://cran.r-project.org/).
+
+Data will be examined using standard univariate descriptive measures as well as graphical displays. Means, standard deviations, medians, and quartiles will be used to summarize continuous variables. Categorical variables will be summarized using counts and percentages.
+
+
+## Multivariable Multinomial Regression
+
+Prior to regression analyses, multiple imputation^[Van Buuren, S., Brand, J. P. L., Groothuis-Oudshoorn, C. G. M., & Rubin, D. B. (2006). Fully conditional specification in multivariate imputation. Journal of Statistical Computation and Simulation, 76(12), 1049–1064. https://doi.org/10.1080/10629360600810434] will be implemented to impute missing values for all participant characteristic variables described above - 20 imputed datasets will be created, and the regression results for each dataset will be pooled using Rubin's Rules^[Rubin, D.B. (1987). Multiple Imputation for Nonresponse in Surveys. New York: John Wiley and Sons. https://doi.org/10.1002/9780470316696].
+
+Multivariable models will be built following the pre-specified sequential order as follows.
+1. Model 1 Covariates: Age, Race, Sex
+1. Model 2 Covariates: Age, Race, Sex, Education, Employment, Income
+1. Model 3 Covariates: Age, Race, Sex, Education, Employment, Income, BMI, Smoking, Alcohol
+
+Each of these three models will be fit with just the exposure as a covariate of interest as well as with the exposure, effect modifier, and their interaction as covariates of interest. 
+
+\newpage
+# Tables and Figures
+
+Table 1 will include means (SD) and medians [Q1, Q3] of the continuous covariates as well as counts and percentages of each level of the categorical covariates, all stratified by the exposure. A column of p values will indicate whether each covariate significantly differed between levels of the exposure. P-values will come from Kruskal-Wallis tests for continuous variables and from Chi-squared tests for categorical variables; p-values from Fisher's exact test will be reported if any expected counts from the Chi-squared tests are less than 5. 
+
+Table 2 will include two tables like Table 1 side by side: one for the participants in the presence of effect modifier, and the other for the participants in the absence of effect modifier. 
+
+Table 3 will display the ORs, confidence intervals, and p-values for each model with the exposure as the predictor of interest, adjusting for the variables described above.
+
+Table 4 will display the ORs, confidence intervals, and p-values for those in the presence and absence of effect modifier separately for each model with the exposure, the effect modifier, and their interactions as the covariates of interest, adjusting for the variables described above.
+
+
+# Future Steps
+
+Once we have finished the enrollment, we will extend this analysis to include all participants in the study.
