@@ -7,6 +7,16 @@ x <- runif(100000)
 hist(x, xlim = c(0,1), ylim = c(0,1.1), breaks = 30, freq = FALSE)
 lines(density(x), col = "red")
 legend("topright", legend = "Distribution of X", lty = 1, col = "red", text.col = "red", bty = "n")
+# Use ggplot to create the same or similar figure as the above figure
+library(tidyverse)
+ggplot(data = tibble(x = x),
+       mapping = aes(x = x)) +
+  geom_histogram(mapping = aes(y = after_stat(density)),
+                 binwidth = 0.01,
+                 fill = "lightblue",
+                 color = "black") +
+  geom_density(color = "red") +
+  theme_minimal()
 
 # Let's see the distribution of the sample mean from a normal distribution
 # when the sample size is as small as 2 (n.small = 2)
