@@ -65,11 +65,11 @@ The outcome of interest is self-reported outcome as measured by the sum of respo
 
 ## Exposure
 
-The exposure is measured using the instrument. The total score `num_exposure` is the sum of responses to 24 questions (`exposure_01` to `exposure_22` in addition to `exposure_29` and `exposure_30`), where the answers to each of these questions can be either 0: "No" or 1:"Yes". Thus, the sum of responses can range from 0 to 24, with higher scores indicating a higher exposure. The variable used in the present analyses (`num_exposure_cat`) consists of two categories : one for participants with 0-3 `num_exposure` and one for participants with 4 or more `num_exposure`. 
+The exposure is measured using the instrument. The total score `num_exposure` is the sum of responses to 24 questions (`exposure_01` to `exposure_22` in addition to `exposure_29` and `exposure_30`), where the answers to each of these questions can be either 0: "No" or 1:"Yes". Thus, the sum of responses can range from 0 to 24, with higher scores indicating a higher exposure. The variable used in the present analyses (`num_exposure_cat`) consists of two categories : one for participants with `num_exposure` between 0 and 3 and one for participants with `num_exposure` equal to 4 or more. 
 
 ## Effect Modifier
 
-The effect modifier will be determined using the `eff_mod` variable, which reflects each participant's answer to the question and has three possible responses: "Yes", "No", and "Don't Know". Participants who responded "Don't Know" to this question are coded as having missing effect modifier information. Note that responses to this question were collected as part of the 3 month follow-up: quite a bit of information regarding the dates of effect modifier occurrence is missing, but a brief check suggested that there are only 2 participants who listed a year of effect modifier occurrence that was the same year they were involved with the study. As of now, it is unclear whether these two participants developed such effect modifier occurrence between enrollment and follow-up or before enrollment in the same calendar year.
+The effect modifier will be determined using the `eff_mod` variable, which reflects each participant's answer to the question and has three possible responses: "Yes", "No", and "Don't Know". Participants who responded "Don't Know" to this question will be coded as having missing effect modifier information. Note that responses to this question were collected as part of the 3 month follow-up: quite a bit of information regarding the dates of effect modifier occurrence is missing, but a brief check suggested that there are only 2 participants who listed a year of effect modifier occurrence that was the same year they were involved with the study. As of now, it is unclear whether these two participants developed such effect modifier occurrence between enrollment and follow-up or before enrollment in the same calendar year.
 
 ## Patient Characteristics
 
@@ -109,13 +109,13 @@ Each of these three models will be fit with just the exposure as a covariate of 
 \newpage
 # Tables and Figures
 
-Table 1 will include means (SD) and medians [Q1, Q3] of the continuous covariates as well as counts and percentages of each level of the categorical covariates, all stratified by the exposure. A column of p values will indicate whether each covariate significantly differed between levels of the exposure. P-values will come from Kruskal-Wallis tests for continuous variables and from Chi-squared tests for categorical variables; p-values from Fisher's exact test will be reported if any expected counts from the Chi-squared tests are less than 5. 
+Table 1 will include means (SD) and medians [Q1, Q3] of the continuous covariates as well as counts and percentages of each level of the categorical covariates, all stratified by the exposure. A column of p values will indicate whether each covariate significantly differed between levels of the exposure. P-values will come from Kruskal-Wallis tests for continuous variables and from Chi-squared tests for categorical variables; p-values from Fisher's exact test will be reported if any expected counts from the Chi-squared tests are less than 5. If Fisher's exact test does not converge, p-values will be suppressed from the table. 
 
-Table 2 will include two tables like Table 1 side by side: one for the participants in the presence of effect modifier, and the other for the participants in the absence of effect modifier. 
+Table 2 will include two tables like Table 1 side by side: one for the participants with the effect modifier, and the other for the participants without the effect modifier. 
 
 Table 3 will display the ORs, confidence intervals, and p-values for each model with the exposure as the predictor of interest, adjusting for the variables described above.
 
-Table 4 will display the ORs, confidence intervals, and p-values for those in the presence and absence of effect modifier separately for each model with the exposure, the effect modifier, and their interactions as the covariates of interest, adjusting for the variables described above.
+Table 4 will display the ORs, confidence intervals, and p-values for those with and without the effect modifier separately for each model with the exposure, the effect modifier, and their interactions as the covariates of interest, adjusting for the variables described above.
 
 
 # Future Steps
