@@ -12,11 +12,14 @@ library(tidyverse)
 ggplot(data = tibble(x = x),
        mapping = aes(x = x)) +
   geom_histogram(mapping = aes(y = after_stat(density)),
-                 binwidth = 0.01,
+                 bins = 20,
                  fill = "lightblue",
                  color = "black") +
   geom_density(color = "red") +
-  theme_minimal()
+  theme_minimal() +
+  labs(x = "X", y = "Density") +
+  ggtitle("Distribution of X") +
+  scale_x_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0))
 
 # Let's see the distribution of the sample mean from a normal distribution
 # when the sample size is as small as 2 (n.small = 2)
