@@ -30,6 +30,15 @@ legend("topright",
        legend = c("Distribution of X", "Distribution of sample mean (n = 2)"),
        lty = 1,
        col = c("red","blue"), text.col = c("red","blue"), bty = "n")
+# Use ggplot to create the same or similar figure as the above figure
+library(tidyverse)
+ggplot(tibble(x.bars = x.bars), aes(x = x.bars)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "white", color = "black") +
+  geom_density(color = "blue") +
+  labs(title = "Distribution of Sample Mean (n = 2)",
+       x = "Sample Mean",
+       y = "Density") +
+  theme_minimal()
 
 # Repeat for iteration #1~#2000 for n.large = 20
 set.seed(975) # set seed so that I can replicate the results
